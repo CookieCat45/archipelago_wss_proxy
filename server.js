@@ -1,5 +1,5 @@
 const WSServer = require("ws").WebSocketServer;
-const prompt = require("prompt-sync")();
+const prompt = require("prompt-sync")({sigint: true});
 const { Client, ServerPacket } = require("archipelago.js");
 const { EventEmitter } = require("ws");
 
@@ -18,14 +18,14 @@ async function main() {
         if (packet.index == 0) {
             inventory = packet;
         }
-        else {
+        else if (inventory != undefined) {
             inventory.items.push(packet.items);
         }
     });
     
     while (true) {
         try {
-            const hostname = prompt("Enter the server hostname (e.g. 'archipelgo.gg'): ");
+            const hostname = prompt("Enter the server hostname (e.g. 'archipelago.gg'): ");
             const port = parseInt(prompt("Enter the server port (e.g. '38281'): "));
             const name = prompt("Enter your slot name: ");
             const password = prompt("Enter the server password (if any, otherwise leave blank): ");
@@ -53,7 +53,7 @@ async function main() {
         }
     }
     
-    const localServer = new WSServer({ port: 0 });
+    const localServer = new WSServer({ port: 11311 });
     const localServerPort = localServer.address().port;
     console.log(`Connected to Archipelago server. Connect your client to 'localhost:${localServerPort}'`);
     
